@@ -1,14 +1,7 @@
-import { Router, json, error } from 'itty-router';
+import { Router } from 'itty-router';
 
 // Создаем роутер
 const router = Router();
-
-// ============ MIDDLEWARE ============
-const withDB = (handler: Function) => {
-  return async (request: Request, env: any, ctx: any) => {
-    return handler(request, env, ctx);
-  };
-};
 
 // ============ HELPERS ============
 const generateId = () => {
@@ -54,7 +47,7 @@ router.get('/', () => {
 // ============ РАЗРАБОТЧИКИ ============
 
 // Получить всех разработчиков
-router.get('/api/developers', withDB(async (request: Request, env: any) => {
+router.get('/api/developers', async (request: Request, env: any) => {
   try {
     const db = env["devstore-api"];
     const result = await db.prepare(
@@ -65,12 +58,19 @@ router.get('/api/developers', withDB(async (request: Request, env: any) => {
   } catch (e: any) {
     return jsonResponse({ success: false, error: e.message }, 500);
   }
-}));
+});
 
 // Получить разработчика по ID
-router.get('/api/developers/:id', withDB(async (request: Request, env: any, ctx: any) => {
+router.get('/api/developers/:id', async (request: Request, env: any) => {
   try {
-    const { id } = ctx.params;
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split('/');
+    const id = pathParts[pathParts.length - 1];
+    
+    if (!id) {
+      return jsonResponse({ success: false, error: 'Developer ID is required' }, 400);
+    }
+    
     const db = env["devstore-api"];
     const result = await db.prepare(
       'SELECT id, name, email, bio, avatar_url, is_verified, registered_at FROM developers WHERE id = ?'
@@ -84,10 +84,10 @@ router.get('/api/developers/:id', withDB(async (request: Request, env: any, ctx:
   } catch (e: any) {
     return jsonResponse({ success: false, error: e.message }, 500);
   }
-}));
+});
 
 // Регистрация разработчика
-router.post('/api/developers/register', withDB(async (request: Request, env: any) => {
+router.post('/api/developers/register', async (request: Request, env: any) => {
   try {
     const body = await request.json() as any;
     const { name, email, password, bio = '', avatar_url = '' } = body;
@@ -121,10 +121,10 @@ router.post('/api/developers/register', withDB(async (request: Request, env: any
   } catch (e: any) {
     return jsonResponse({ success: false, error: e.message }, 500);
   }
-}));
+});
 
 // Вход разработчика
-router.post('/api/developers/login', withDB(async (request: Request, env: any) => {
+router.post('/api/developers/login', async (request: Request, env: any) => {
   try {
     const body = await request.json() as any;
     const { email, password } = body;
@@ -166,12 +166,12 @@ router.post('/api/developers/login', withDB(async (request: Request, env: any) =
   } catch (e: any) {
     return jsonResponse({ success: false, error: e.message }, 500);
   }
-}));
+});
 
 // ============ ПРИЛОЖЕНИЯ ============
 
 // Получить все приложения
-router.get('/api/apps', withDB(async (request: Request, env: any) => {
+router.get('/api/apps', async (request: Request, env: any) => {
   try {
     const url = new URL(request.url);
     const category = url.searchParams.get('category');
@@ -204,12 +204,19 @@ router.get('/api/apps', withDB(async (request: Request, env: any) => {
   } catch (e: any) {
     return jsonResponse({ success: false, error: e.message }, 500);
   }
-}));
+});
 
 // Получить приложение по ID
-router.get('/api/apps/:id', withDB(async (request: Request, env: any, ctx: any) => {
+router.get('/api/apps/:id', async (request: Request, env: any) => {
   try {
-    const { id } = ctx.params;
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split('/');
+    const id = pathParts[pathParts.length - 1];
+    
+    if (!id) {
+      return jsonResponse({ success: false, error: 'App ID is required' }, 400);
+    }
+    
     const db = env["devstore-api"];
     const result = await db.prepare(
       `SELECT a.*, d.name as developer_name 
@@ -226,10 +233,10 @@ router.get('/api/apps/:id', withDB(async (request: Request, env: any, ctx: any) 
   } catch (e: any) {
     return jsonResponse({ success: false, error: e.message }, 500);
   }
-}));
+});
 
 // Добавить приложение
-router.post('/api/apps', withDB(async (request: Request, env: any) => {
+router.post('/api/apps', async (request: Request, env: any) => {
   try {
     const body = await request.json() as any;
     const { 
@@ -260,12 +267,19 @@ router.post('/api/apps', withDB(async (request: Request, env: any) => {
   } catch (e: any) {
     return jsonResponse({ success: false, error: e.message }, 500);
   }
-}));
+});
 
 // Обновить приложение
-router.put('/api/apps/:id', withDB(async (request: Request, env: any, ctx: any) => {
+router.put('/api/apps/:id', async (request: Request, env: any) => {
   try {
-    const { id } = ctx.params;
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split('/');
+    const id = pathParts[pathParts.length - 1];
+    
+    if (!id) {
+      return jsonResponse({ success: false, error: 'App ID is required' }, 400);
+    }
+    
     const body = await request.json() as any;
     const { name, package_name, description, version, version_code, size, category, icon_url, apk_url, screenshots } = body;
     const db = env["devstore-api"];
@@ -293,12 +307,19 @@ router.put('/api/apps/:id', withDB(async (request: Request, env: any, ctx: any) 
   } catch (e: any) {
     return jsonResponse({ success: false, error: e.message }, 500);
   }
-}));
+});
 
 // Удалить приложение
-router.delete('/api/apps/:id', withDB(async (request: Request, env: any, ctx: any) => {
+router.delete('/api/apps/:id', async (request: Request, env: any) => {
   try {
-    const { id } = ctx.params;
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split('/');
+    const id = pathParts[pathParts.length - 1];
+    
+    if (!id) {
+      return jsonResponse({ success: false, error: 'App ID is required' }, 400);
+    }
+    
     const db = env["devstore-api"];
     await db.prepare('DELETE FROM apps WHERE id = ?').bind(id).run();
     await db.prepare('DELETE FROM app_updates WHERE app_id = ?').bind(id).run();
@@ -306,14 +327,21 @@ router.delete('/api/apps/:id', withDB(async (request: Request, env: any, ctx: an
   } catch (e: any) {
     return jsonResponse({ success: false, error: e.message }, 500);
   }
-}));
+});
 
 // ============ ОТЗЫВЫ ============
 
 // Получить отзывы для приложения
-router.get('/api/apps/:id/reviews', withDB(async (request: Request, env: any, ctx: any) => {
+router.get('/api/apps/:id/reviews', async (request: Request, env: any) => {
   try {
-    const { id } = ctx.params;
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split('/');
+    const id = pathParts[pathParts.length - 2];
+    
+    if (!id) {
+      return jsonResponse({ success: false, error: 'App ID is required' }, 400);
+    }
+    
     const db = env["devstore-api"];
     const result = await db.prepare(
       'SELECT * FROM reviews WHERE app_id = ? ORDER BY date DESC'
@@ -323,10 +351,10 @@ router.get('/api/apps/:id/reviews', withDB(async (request: Request, env: any, ct
   } catch (e: any) {
     return jsonResponse({ success: false, error: e.message }, 500);
   }
-}));
+});
 
 // Добавить отзыв
-router.post('/api/reviews', withDB(async (request: Request, env: any) => {
+router.post('/api/reviews', async (request: Request, env: any) => {
   try {
     const body = await request.json() as any;
     const { app_id, author_name, text, rating } = body;
@@ -356,14 +384,21 @@ router.post('/api/reviews', withDB(async (request: Request, env: any) => {
   } catch (e: any) {
     return jsonResponse({ success: false, error: e.message }, 500);
   }
-}));
+});
 
 // ============ ОБНОВЛЕНИЯ ============
 
 // Проверить обновление приложения
-router.get('/api/apps/:id/update', withDB(async (request: Request, env: any, ctx: any) => {
+router.get('/api/apps/:id/update', async (request: Request, env: any) => {
   try {
-    const { id } = ctx.params;
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split('/');
+    const id = pathParts[pathParts.length - 2];
+    
+    if (!id) {
+      return jsonResponse({ success: false, error: 'App ID is required' }, 400);
+    }
+    
     const db = env["devstore-api"];
     
     // Получаем текущую версию из app_updates
@@ -403,10 +438,10 @@ router.get('/api/apps/:id/update', withDB(async (request: Request, env: any, ctx
   } catch (e: any) {
     return jsonResponse({ success: false, error: e.message }, 500);
   }
-}));
+});
 
 // Обновить информацию об обновлении
-router.post('/api/updates', withDB(async (request: Request, env: any) => {
+router.post('/api/updates', async (request: Request, env: any) => {
   try {
     const body = await request.json() as any;
     const { app_id, version_code, version_name, apk_url, changelog = '' } = body;
@@ -430,12 +465,12 @@ router.post('/api/updates', withDB(async (request: Request, env: any) => {
   } catch (e: any) {
     return jsonResponse({ success: false, error: e.message }, 500);
   }
-}));
+});
 
 // ============ СИНХРОНИЗАЦИЯ ============
 
 // Получить все данные для синхронизации (офлайн-режим)
-router.get('/api/sync', withDB(async (request: Request, env: any) => {
+router.get('/api/sync', async (request: Request, env: any) => {
   try {
     const db = env["devstore-api"];
     
@@ -470,7 +505,7 @@ router.get('/api/sync', withDB(async (request: Request, env: any) => {
   } catch (e: any) {
     return jsonResponse({ success: false, error: e.message }, 500);
   }
-}));
+});
 
 // ============ ОБРАБОТКА CORS ============
 router.options('*', () => {
