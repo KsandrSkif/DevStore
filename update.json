@@ -1,6 +1,6 @@
 {
-    "versionCode": 3,
-    "versionName": "1.1",
-    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.1.apk",
-    "changelog": "Исправление ошибок загрузки\nУлучшение интерфейса"
+    "versionCode": 4,
+    "versionName": "1.2",
+    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.2.apk",
+    "changelog": "Реализована система регистрации и авторизации разработчиков\nУлучшение интерфейса"
 }
