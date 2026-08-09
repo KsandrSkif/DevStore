@@ -5,7 +5,7 @@
   "compatibility_flags": ["nodejs_compat"],
   "d1_databases": [
     {
-      "binding": "DB",
+      "binding": "devstore-api",
       "database_name": "devstore-db",
       "database_id": "5d0b5681-1ab1-43e8-bbc7-4bdebc622a23"
     }
@@ -14,7 +14,7 @@
     "production": {
       "d1_databases": [
         {
-          "binding": "DB",
+          "binding": "devstore-api",
           "database_name": "devstore-db",
           "database_id": "5d0b5681-1ab1-43e8-bbc7-4bdebc622a23"
         }
