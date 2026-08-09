@@ -1,6 +1,6 @@
 {
   "versionCode": 2,
-  "versionName": "1.1.0",
+  "versionName": "1.1.1",
   "apkUrl": "https://release-assets.githubusercontent.com/github-production-release-asset/1328079129/4d3e1a2b-fd3d-4a6d-8d5f-51ccc27b8745?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-08-09T09%3A00%3A37Z&rscd=attachment%3B+filename%3DDevStore_1.0.apk&rsct=application%2Fvnd.android.package-archive&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-08-09T08%3A00%3A30Z&ske=2026-08-09T09%3A00%3A37Z&sks=b&skv=2018-11-09&sig=pk9OjeyH2uln6QdhdLxrz3H47t5khD%2FyI9R8YXeShb8%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc4NjI2MjczMCwibmJmIjoxNzg2MjYyNDMwLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.ylThEpD6cxJNCUdoDh_TW2v7_Mp44Sj1dFgmr84B91o&response-content-disposition=attachment%3B%20filename%3DDevStore_1.0.apk&response-content-type=application%2Fvnd.android.package-archive",
   "changelog": "Добавлена проверка обновлений, исправлены баги"
 }
