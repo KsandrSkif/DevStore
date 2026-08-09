@@ -200,7 +200,21 @@ router.get('/api/apps', async (request: Request, env: any) => {
     
     const result = await db.prepare(query).bind(...params).all();
     
-    return jsonResponse({ success: true, data: result.results });
+    // ПАРСИМ screenshots КАК JSON
+    const apps = result.results.map((app: any) => {
+      let screenshots = [];
+      try {
+        screenshots = JSON.parse(app.screenshots || '[]');
+      } catch (e) {
+        screenshots = [];
+      }
+      return {
+        ...app,
+        screenshots: screenshots
+      };
+    });
+    
+    return jsonResponse({ success: true, data: apps });
   } catch (e: any) {
     return jsonResponse({ success: false, error: e.message }, 500);
   }
@@ -229,7 +243,21 @@ router.get('/api/apps/:id', async (request: Request, env: any) => {
       return jsonResponse({ success: false, error: 'App not found' }, 404);
     }
     
-    return jsonResponse({ success: true, data: result });
+    // ПАРСИМ screenshots КАК JSON
+    let screenshots = [];
+    try {
+      screenshots = JSON.parse(result.screenshots || '[]');
+    } catch (e) {
+      screenshots = [];
+    }
+    
+    return jsonResponse({ 
+      success: true, 
+      data: {
+        ...result,
+        screenshots: screenshots
+      }
+    });
   } catch (e: any) {
     return jsonResponse({ success: false, error: e.message }, 500);
   }
