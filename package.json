@@ -1,0 +1,20 @@
+{
+  "name": "devstore-api",
+  "version": "1.0.0",
+  "description": "DevStore API for Cloudflare Workers",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:generate": "wrangler d1 execute devstore-db --file=./migrations/schema.sql",
+    "db:reset": "wrangler d1 execute devstore-db --file=./migrations/reset.sql"
+  },
+  "dependencies": {
+    "itty-router": "^4.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.0.0",
+    "typescript": "^5.0.0",
+    "wrangler": "^3.0.0"
+  }
+}
