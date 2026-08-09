@@ -56,7 +56,8 @@ router.get('/', () => {
 // Получить всех разработчиков
 router.get('/api/developers', withDB(async (request: Request, env: any) => {
   try {
-    const result = await env.DB.prepare(
+    const db = env["devstore-api"];
+    const result = await db.prepare(
       'SELECT id, name, email, bio, avatar_url, is_verified, registered_at FROM developers ORDER BY registered_at DESC'
     ).all();
     
@@ -70,7 +71,8 @@ router.get('/api/developers', withDB(async (request: Request, env: any) => {
 router.get('/api/developers/:id', withDB(async (request: Request, env: any, ctx: any) => {
   try {
     const { id } = ctx.params;
-    const result = await env.DB.prepare(
+    const db = env["devstore-api"];
+    const result = await db.prepare(
       'SELECT id, name, email, bio, avatar_url, is_verified, registered_at FROM developers WHERE id = ?'
     ).bind(id).first();
     
@@ -89,13 +91,14 @@ router.post('/api/developers/register', withDB(async (request: Request, env: any
   try {
     const body = await request.json() as any;
     const { name, email, password, bio = '', avatar_url = '' } = body;
+    const db = env["devstore-api"];
     
     if (!name || !email || !password) {
       return jsonResponse({ success: false, error: 'Missing required fields' }, 400);
     }
     
     // Проверяем email
-    const existing = await env.DB.prepare(
+    const existing = await db.prepare(
       'SELECT id FROM developers WHERE email = ?'
     ).bind(email).first();
     
@@ -106,7 +109,7 @@ router.post('/api/developers/register', withDB(async (request: Request, env: any
     const id = generateId();
     const passwordHash = await hashPassword(password);
     
-    await env.DB.prepare(
+    await db.prepare(
       `INSERT INTO developers (id, name, email, password_hash, bio, avatar_url) 
        VALUES (?, ?, ?, ?, ?, ?)`
     ).bind(id, name, email, passwordHash, bio, avatar_url).run();
@@ -125,12 +128,13 @@ router.post('/api/developers/login', withDB(async (request: Request, env: any) =
   try {
     const body = await request.json() as any;
     const { email, password } = body;
+    const db = env["devstore-api"];
     
     if (!email || !password) {
       return jsonResponse({ success: false, error: 'Missing email or password' }, 400);
     }
     
-    const developer = await env.DB.prepare(
+    const developer = await db.prepare(
       'SELECT * FROM developers WHERE email = ?'
     ).bind(email).first();
     
@@ -144,7 +148,7 @@ router.post('/api/developers/login', withDB(async (request: Request, env: any) =
     }
     
     // Обновляем время последнего входа
-    await env.DB.prepare(
+    await db.prepare(
       'UPDATE developers SET last_login = ? WHERE id = ?'
     ).bind(Date.now(), developer.id).run();
     
@@ -172,6 +176,7 @@ router.get('/api/apps', withDB(async (request: Request, env: any) => {
     const url = new URL(request.url);
     const category = url.searchParams.get('category');
     const search = url.searchParams.get('search');
+    const db = env["devstore-api"];
     
     let query = `
       SELECT a.*, d.name as developer_name 
@@ -193,7 +198,7 @@ router.get('/api/apps', withDB(async (request: Request, env: any) => {
     
     query += ' ORDER BY a.download_count DESC';
     
-    const result = await env.DB.prepare(query).bind(...params).all();
+    const result = await db.prepare(query).bind(...params).all();
     
     return jsonResponse({ success: true, data: result.results });
   } catch (e: any) {
@@ -205,7 +210,8 @@ router.get('/api/apps', withDB(async (request: Request, env: any) => {
 router.get('/api/apps/:id', withDB(async (request: Request, env: any, ctx: any) => {
   try {
     const { id } = ctx.params;
-    const result = await env.DB.prepare(
+    const db = env["devstore-api"];
+    const result = await db.prepare(
       `SELECT a.*, d.name as developer_name 
        FROM apps a 
        LEFT JOIN developers d ON a.developer_id = d.id 
@@ -230,6 +236,7 @@ router.post('/api/apps', withDB(async (request: Request, env: any) => {
       developer_id, name, package_name, description, version, 
       version_code, size, category, icon_url, apk_url, screenshots = []
     } = body;
+    const db = env["devstore-api"];
     
     if (!developer_id || !name || !package_name || !version) {
       return jsonResponse({ success: false, error: 'Missing required fields' }, 400);
@@ -238,13 +245,13 @@ router.post('/api/apps', withDB(async (request: Request, env: any) => {
     const id = generateId();
     const screenshotsJson = JSON.stringify(screenshots);
     
-    await env.DB.prepare(
+    await db.prepare(
       `INSERT INTO apps (id, developer_id, name, package_name, description, version, version_code, size, category, icon_url, apk_url, screenshots) 
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     ).bind(id, developer_id, name, package_name, description, version, version_code, size, category, icon_url, apk_url, screenshotsJson).run();
     
     // Добавляем запись в обновления
-    await env.DB.prepare(
+    await db.prepare(
       `INSERT OR REPLACE INTO app_updates (app_id, version_code, version_name, apk_url, changelog) 
        VALUES (?, ?, ?, ?, ?)`
     ).bind(id, version_code, version, apk_url, description).run();
@@ -261,10 +268,11 @@ router.put('/api/apps/:id', withDB(async (request: Request, env: any, ctx: any) 
     const { id } = ctx.params;
     const body = await request.json() as any;
     const { name, package_name, description, version, version_code, size, category, icon_url, apk_url, screenshots } = body;
+    const db = env["devstore-api"];
     
     const screenshotsJson = JSON.stringify(screenshots || []);
     
-    await env.DB.prepare(
+    await db.prepare(
       `UPDATE apps SET 
         name = ?, package_name = ?, description = ?, version = ?, 
         version_code = ?, size = ?, category = ?, icon_url = ?, 
@@ -276,7 +284,7 @@ router.put('/api/apps/:id', withDB(async (request: Request, env: any, ctx: any) 
     ).run();
     
     // Обновляем запись об обновлении
-    await env.DB.prepare(
+    await db.prepare(
       `INSERT OR REPLACE INTO app_updates (app_id, version_code, version_name, apk_url, changelog) 
        VALUES (?, ?, ?, ?, ?)`
     ).bind(id, version_code, version, apk_url, description).run();
@@ -291,8 +299,9 @@ router.put('/api/apps/:id', withDB(async (request: Request, env: any, ctx: any) 
 router.delete('/api/apps/:id', withDB(async (request: Request, env: any, ctx: any) => {
   try {
     const { id } = ctx.params;
-    await env.DB.prepare('DELETE FROM apps WHERE id = ?').bind(id).run();
-    await env.DB.prepare('DELETE FROM app_updates WHERE app_id = ?').bind(id).run();
+    const db = env["devstore-api"];
+    await db.prepare('DELETE FROM apps WHERE id = ?').bind(id).run();
+    await db.prepare('DELETE FROM app_updates WHERE app_id = ?').bind(id).run();
     return jsonResponse({ success: true });
   } catch (e: any) {
     return jsonResponse({ success: false, error: e.message }, 500);
@@ -305,7 +314,8 @@ router.delete('/api/apps/:id', withDB(async (request: Request, env: any, ctx: an
 router.get('/api/apps/:id/reviews', withDB(async (request: Request, env: any, ctx: any) => {
   try {
     const { id } = ctx.params;
-    const result = await env.DB.prepare(
+    const db = env["devstore-api"];
+    const result = await db.prepare(
       'SELECT * FROM reviews WHERE app_id = ? ORDER BY date DESC'
     ).bind(id).all();
     
@@ -320,24 +330,25 @@ router.post('/api/reviews', withDB(async (request: Request, env: any) => {
   try {
     const body = await request.json() as any;
     const { app_id, author_name, text, rating } = body;
+    const db = env["devstore-api"];
     
     if (!app_id || !author_name || !text || !rating) {
       return jsonResponse({ success: false, error: 'Missing required fields' }, 400);
     }
     
     const id = generateId();
-    await env.DB.prepare(
+    await db.prepare(
       `INSERT INTO reviews (id, app_id, author_name, text, rating) 
        VALUES (?, ?, ?, ?, ?)`
     ).bind(id, app_id, author_name, text, rating).run();
     
     // Пересчитываем средний рейтинг
-    const avgResult = await env.DB.prepare(
+    const avgResult = await db.prepare(
       'SELECT AVG(rating) as avg_rating FROM reviews WHERE app_id = ?'
     ).bind(app_id).first();
     
     const avgRating = avgResult?.avg_rating || 0;
-    await env.DB.prepare(
+    await db.prepare(
       'UPDATE apps SET rating = ? WHERE id = ?'
     ).bind(avgRating, app_id).run();
     
@@ -353,15 +364,16 @@ router.post('/api/reviews', withDB(async (request: Request, env: any) => {
 router.get('/api/apps/:id/update', withDB(async (request: Request, env: any, ctx: any) => {
   try {
     const { id } = ctx.params;
+    const db = env["devstore-api"];
     
     // Получаем текущую версию из app_updates
-    let update = await env.DB.prepare(
+    let update = await db.prepare(
       'SELECT * FROM app_updates WHERE app_id = ?'
     ).bind(id).first();
     
     if (!update) {
       // Если нет в кэше, получаем из apps
-      const app = await env.DB.prepare(
+      const app = await db.prepare(
         'SELECT id, version_code, version, apk_url FROM apps WHERE id = ?'
       ).bind(id).first();
       
@@ -370,7 +382,7 @@ router.get('/api/apps/:id/update', withDB(async (request: Request, env: any, ctx
       }
       
       // Добавляем в кэш
-      await env.DB.prepare(
+      await db.prepare(
         `INSERT OR REPLACE INTO app_updates (app_id, version_code, version_name, apk_url, changelog) 
          VALUES (?, ?, ?, ?, ?)`
       ).bind(app.id, app.version_code, app.version, app.apk_url, '').run();
@@ -398,18 +410,19 @@ router.post('/api/updates', withDB(async (request: Request, env: any) => {
   try {
     const body = await request.json() as any;
     const { app_id, version_code, version_name, apk_url, changelog = '' } = body;
+    const db = env["devstore-api"];
     
     if (!app_id || !version_code || !version_name || !apk_url) {
       return jsonResponse({ success: false, error: 'Missing required fields' }, 400);
     }
     
-    await env.DB.prepare(
+    await db.prepare(
       `INSERT OR REPLACE INTO app_updates (app_id, version_code, version_name, apk_url, changelog, last_checked) 
        VALUES (?, ?, ?, ?, ?, ?)`
     ).bind(app_id, version_code, version_name, apk_url, changelog, Date.now()).run();
     
     // Обновляем версию в apps
-    await env.DB.prepare(
+    await db.prepare(
       'UPDATE apps SET version = ?, version_code = ?, apk_url = ?, updated_at = ? WHERE id = ?'
     ).bind(version_name, version_code, apk_url, Date.now(), app_id).run();
     
@@ -424,21 +437,23 @@ router.post('/api/updates', withDB(async (request: Request, env: any) => {
 // Получить все данные для синхронизации (офлайн-режим)
 router.get('/api/sync', withDB(async (request: Request, env: any) => {
   try {
-    const apps = await env.DB.prepare(
+    const db = env["devstore-api"];
+    
+    const apps = await db.prepare(
       `SELECT a.*, d.name as developer_name 
        FROM apps a 
        LEFT JOIN developers d ON a.developer_id = d.id`
     ).all();
     
-    const developers = await env.DB.prepare(
+    const developers = await db.prepare(
       'SELECT id, name, email, bio, avatar_url, is_verified, registered_at FROM developers'
     ).all();
     
-    const reviews = await env.DB.prepare(
+    const reviews = await db.prepare(
       'SELECT * FROM reviews'
     ).all();
     
-    const updates = await env.DB.prepare(
+    const updates = await db.prepare(
       'SELECT * FROM app_updates'
     ).all();
     
