@@ -7,7 +7,7 @@
     {
       "binding": "DB",
       "database_name": "devstore-db",
-      "database_id": "YOUR_DATABASE_ID"
+      "database_id": "5d0b5681-1ab1-43e8-bbc7-4bdebc622a23"
     }
   ],
   "env": {
@@ -16,7 +16,7 @@
         {
           "binding": "DB",
           "database_name": "devstore-db",
-          "database_id": "YOUR_DATABASE_ID"
+          "database_id": "5d0b5681-1ab1-43e8-bbc7-4bdebc622a23"
         }
       ]
     }
