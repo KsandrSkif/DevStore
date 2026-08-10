@@ -2,5 +2,5 @@
     "versionCode": 7,
     "versionName": "1.5",
     "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.5.apk",
-    "changelog": "Исправлено падение приложение при отсутствии интернета\nпри заходе в окно отладки"
+    "changelog": "Исправлено падение приложения при отсутствии интернета\nпри заходе в окно отладки"
 }
