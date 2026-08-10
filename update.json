@@ -1,6 +1,6 @@
 {
-    "versionCode": 6,
-    "versionName": "1.4",
-    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.4.apk",
-    "changelog": "Подключено к серверу\nПолная реализация"
+    "versionCode": 7,
+    "versionName": "1.5",
+    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.5.apk",
+    "changelog": "Исправлено падение приложение при отсутствии интернета\nпри заходе в окно отладки"
 }
