@@ -1,6 +1,6 @@
 {
-    "versionCode": 9,
-    "versionName": "1.7",
-    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.7.apk",
-    "changelog": "Редизайн:\n- окно Профиль\n- окно Настройки\n- окно О приложении"
+    "versionCode": 10,
+    "versionName": "1.8",
+    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.8.apk",
+    "changelog": "Редизайн:\n- окно Мои приложения\n- окно Новое приложение\n- окно Редактирование приложения"
 }
