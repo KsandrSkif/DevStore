@@ -2,5 +2,5 @@
     "versionCode": 12,
     "versionName": "1.10",
     "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.10.apk",
-    "changelog": "Редизайн:\n- окно Отладка (пока доступно в бэте)\n+ мелкие незаметные улучшения"
+    "changelog": "Редизайн:\n- окно Отладка (пока доступно в бэте)"
 }
