@@ -13,22 +13,6 @@ VALUES (
 INSERT OR IGNORE INTO apps (id, developer_id, name, package_name, description, version, version_code, size, category, icon_url, apk_url, screenshots, rating, download_count) 
 VALUES 
 (
-    'demo_1',
-    'dev_system',
-    'DevTools Pro',
-    'com.demo.devtools',
-    'Профессиональный набор инструментов для разработчиков Android',
-    '2.1.0',
-    2,
-    '12 МБ',
-    'Инструменты',
-    'https://raw.githubusercontent.com/github/explore/main/topics/android/android.png',
-    '',
-    '[]',
-    4.7,
-    1250
-),
-(
     'demo_2',
     'dev_system',
     'Code Editor',
