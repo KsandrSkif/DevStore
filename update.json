@@ -1,6 +1,6 @@
 {
-    "versionCode": 15,
-    "versionName": "1.13",
-    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.13.apk",
-    "changelog": "Новое окно для разработчиков:\n- Инструкция с полным описанием"
+    "versionCode": 16,
+    "versionName": "1.14",
+    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.14.apk",
+    "changelog": "Серверное обновление:\n- улучшена работа взаимодействия с сервером\n- внесены корректировки редактирования и удаления приложений при общении с сервером"
 }
