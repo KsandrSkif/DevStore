@@ -60,6 +60,32 @@ router.get('/api/developers', async (request: Request, env: any) => {
   }
 });
 
+// Удалить разработчика
+router.delete('/api/developers/:id', async (request: Request, env: any) => {
+  try {
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split('/');
+    const id = pathParts[pathParts.length - 1];
+    
+    if (!id) {
+      return jsonResponse({ success: false, error: 'Developer ID is required' }, 400);
+    }
+    
+    const db = env["devstore-api"];
+    
+    // Сначала удаляем все приложения разработчика
+    await db.prepare('DELETE FROM apps WHERE developer_id = ?').bind(id).run();
+    // Затем удаляем самого разработчика
+    await db.prepare('DELETE FROM developers WHERE id = ?').bind(id).run();
+    // Удаляем записи об обновлениях
+    await db.prepare('DELETE FROM app_updates WHERE app_id IN (SELECT id FROM apps WHERE developer_id = ?)').bind(id).run();
+    
+    return jsonResponse({ success: true });
+  } catch (e: any) {
+    return jsonResponse({ success: false, error: e.message }, 500);
+  }
+});
+
 // Получить разработчика по ID
 router.get('/api/developers/:id', async (request: Request, env: any) => {
   try {
