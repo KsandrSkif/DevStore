@@ -194,6 +194,47 @@ router.post('/api/developers/login', async (request: Request, env: any) => {
   }
 });
 
+// Удалить отзыв
+router.delete('/api/reviews/:id', async (request: Request, env: any) => {
+  try {
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split('/');
+    const id = pathParts[pathParts.length - 1];
+    
+    if (!id) {
+      return jsonResponse({ success: false, error: 'Review ID is required' }, 400);
+    }
+    
+    const db = env["devstore-api"];
+    
+    // Получаем app_id перед удалением
+    const review = await db.prepare(
+      'SELECT app_id FROM reviews WHERE id = ?'
+    ).bind(id).first();
+    
+    if (!review) {
+      return jsonResponse({ success: false, error: 'Review not found' }, 404);
+    }
+    
+    // Удаляем отзыв
+    await db.prepare('DELETE FROM reviews WHERE id = ?').bind(id).run();
+    
+    // Пересчитываем средний рейтинг
+    const avgResult = await db.prepare(
+      'SELECT AVG(rating) as avg_rating FROM reviews WHERE app_id = ?'
+    ).bind(review.app_id).first();
+    
+    const avgRating = avgResult?.avg_rating || 0;
+    await db.prepare(
+      'UPDATE apps SET rating = ? WHERE id = ?'
+    ).bind(avgRating, review.app_id).run();
+    
+    return jsonResponse({ success: true });
+  } catch (e: any) {
+    return jsonResponse({ success: false, error: e.message }, 500);
+  }
+});
+
 // ============ РАЗРАБОТЧИКИ (ДОПОЛНЕНИЕ) ============
 
 // Обновить разработчика
