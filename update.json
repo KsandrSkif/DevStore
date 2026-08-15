@@ -1,6 +1,6 @@
 {
-    "versionCode": 18,
-    "versionName": "1.16",
-    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.16.apk",
-    "changelog": "Серверное обновление:\n- улучшена работа взаимодействия с сервером\n- сначала всё сломал, потом всё починил"
+    "versionCode": 19,
+    "versionName": "1.17",
+    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.17.apk",
+    "changelog": "Серверное обновление:\n- улучшена работа взаимодействия с сервером\n- внутренние работы над отладкой и администированием"
 }
