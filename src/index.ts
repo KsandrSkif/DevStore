@@ -194,6 +194,54 @@ router.post('/api/developers/login', async (request: Request, env: any) => {
   }
 });
 
+// ============ РАЗРАБОТЧИКИ (ДОПОЛНЕНИЕ) ============
+
+// Обновить разработчика
+router.put('/api/developers/:id', async (request: Request, env: any) => {
+  try {
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split('/');
+    const id = pathParts[pathParts.length - 1];
+    
+    if (!id) {
+      return jsonResponse({ success: false, error: 'Developer ID is required' }, 400);
+    }
+    
+    const body = await request.json() as any;
+    const { name, bio, avatar_url } = body;
+    const db = env["devstore-api"];
+    
+    // Проверяем, существует ли разработчик
+    const existing = await db.prepare(
+      'SELECT id FROM developers WHERE id = ?'
+    ).bind(id).first();
+    
+    if (!existing) {
+      return jsonResponse({ success: false, error: 'Developer not found' }, 404);
+    }
+    
+    // Обновляем разработчика
+    await db.prepare(
+      `UPDATE developers SET 
+        name = ?, 
+        bio = ?, 
+        avatar_url = ?, 
+        updated_at = ?
+       WHERE id = ?`
+    ).bind(
+      name || existing.name,
+      bio || '',
+      avatar_url || '',
+      Date.now(),
+      id
+    ).run();
+    
+    return jsonResponse({ success: true });
+  } catch (e: any) {
+    return jsonResponse({ success: false, error: e.message }, 500);
+  }
+});
+
 // ============ ПРИЛОЖЕНИЯ ============
 
 // Получить все приложения
