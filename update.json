@@ -1,6 +1,6 @@
 {
-    "versionCode": 19,
-    "versionName": "1.17",
-    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.17.apk",
-    "changelog": "Серверное обновление:\n- улучшена работа взаимодействия с сервером\n- внутренние работы над отладкой и администированием"
+    "versionCode": 20,
+    "versionName": "1.18",
+    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.18.apk",
+    "changelog": "Улучшение:\n- добавлена возможность просмотра скриншотов во весь экран"
 }
