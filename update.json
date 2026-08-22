@@ -1,6 +1,6 @@
 {
-    "versionCode": 24,
-    "versionName": "1.22",
-    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.22.apk",
-    "changelog": "Улучшение:\n- Реализован реальный счётчик скачиваемых приложений"
+    "versionCode": 25,
+    "versionName": "1.23",
+    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.23.apk",
+    "changelog": "Улучшение:\n- Серверное обновление, реализовано отображение реальной информации о заливке в магазин приложений"
 }
