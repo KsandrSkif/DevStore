@@ -1,6 +1,6 @@
 {
-    "versionCode": 22,
-    "versionName": "1.20",
-    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.20.apk",
-    "changelog": "Изменение:\n- В разделе О приложении реализован подраздел Политика конфиденциальности"
+    "versionCode": 23,
+    "versionName": "1.21",
+    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.21.apk",
+    "changelog": "Изменение:\n- В разделе О приложении реализован новый подраздел Пользовательское соглашение"
 }
