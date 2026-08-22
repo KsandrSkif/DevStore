@@ -423,7 +423,11 @@ router.put('/api/apps/:id', async (request: Request, env: any) => {
     }
     
     const body = await request.json() as any;
-    const { name, age_rating, description, version, version_code, size, category, icon_url, apk_url, screenshots } = body;
+    const { 
+      name, age_rating, description, version, version_code, 
+      size, category, icon_url, apk_url, screenshots, 
+      download_count  // <-- ДОБАВЛЯЕМ download_count
+    } = body;
     const db = env["devstore-api"];
     
     const screenshotsJson = JSON.stringify(screenshots || []);
@@ -432,13 +436,16 @@ router.put('/api/apps/:id', async (request: Request, env: any) => {
       `UPDATE apps SET 
         name = ?, age_rating = ?, description = ?, version = ?, 
         version_code = ?, size = ?, category = ?, icon_url = ?, 
-        apk_url = ?, screenshots = ?, updated_at = ?
+        apk_url = ?, screenshots = ?, download_count = ?, updated_at = ?
        WHERE id = ?`
     ).bind(
       name, age_rating, description, version, version_code, 
-      size, category, icon_url, apk_url, screenshotsJson, Date.now(), id
+      size, category, icon_url, apk_url, screenshotsJson, 
+      download_count || 0,  // <-- ДОБАВЛЯЕМ download_count
+      Date.now(), id
     ).run();
     
+    // Обновляем запись об обновлении
     await db.prepare(
       `INSERT OR REPLACE INTO app_updates (app_id, version_code, version_name, apk_url, changelog) 
        VALUES (?, ?, ?, ?, ?)`
