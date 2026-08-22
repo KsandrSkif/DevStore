@@ -1,6 +1,6 @@
 {
-    "versionCode": 20,
-    "versionName": "1.18",
-    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.18.apk",
-    "changelog": "Улучшение:\n- добавлена возможность просмотра скриншотов во весь экран"
+    "versionCode": 21,
+    "versionName": "1.19",
+    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.19.apk",
+    "changelog": "Изменение:\n- заменено package name на выбор возрастного ограничения"
 }
