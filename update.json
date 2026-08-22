@@ -1,6 +1,6 @@
 {
-    "versionCode": 21,
-    "versionName": "1.19",
-    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.19.apk",
-    "changelog": "Изменение:\n- заменено package name на выбор возрастного ограничения"
+    "versionCode": 22,
+    "versionName": "1.20",
+    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.20.apk",
+    "changelog": "Изменение:\n- В разделе "О приложении" реализован подраздел "Политика конфиденциальности""
 }
