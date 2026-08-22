@@ -383,12 +383,12 @@ router.post('/api/apps', async (request: Request, env: any) => {
   try {
     const body = await request.json() as any;
     const { 
-      developer_id, name, package_name, description, version, 
+      developer_id, name, age_rating, description, version, 
       version_code, size, category, icon_url, apk_url, screenshots = []
     } = body;
     const db = env["devstore-api"];
     
-    if (!developer_id || !name || !package_name || !version) {
+    if (!developer_id || !name || !age_rating || !version) {
       return jsonResponse({ success: false, error: 'Missing required fields' }, 400);
     }
     
@@ -396,11 +396,10 @@ router.post('/api/apps', async (request: Request, env: any) => {
     const screenshotsJson = JSON.stringify(screenshots);
     
     await db.prepare(
-      `INSERT INTO apps (id, developer_id, name, package_name, description, version, version_code, size, category, icon_url, apk_url, screenshots) 
+      `INSERT INTO apps (id, developer_id, name, age_rating, description, version, version_code, size, category, icon_url, apk_url, screenshots) 
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-    ).bind(id, developer_id, name, package_name, description, version, version_code, size, category, icon_url, apk_url, screenshotsJson).run();
+    ).bind(id, developer_id, name, age_rating, description, version, version_code, size, category, icon_url, apk_url, screenshotsJson).run();
     
-    // Добавляем запись в обновления
     await db.prepare(
       `INSERT OR REPLACE INTO app_updates (app_id, version_code, version_name, apk_url, changelog) 
        VALUES (?, ?, ?, ?, ?)`
@@ -424,23 +423,22 @@ router.put('/api/apps/:id', async (request: Request, env: any) => {
     }
     
     const body = await request.json() as any;
-    const { name, package_name, description, version, version_code, size, category, icon_url, apk_url, screenshots } = body;
+    const { name, age_rating, description, version, version_code, size, category, icon_url, apk_url, screenshots } = body;
     const db = env["devstore-api"];
     
     const screenshotsJson = JSON.stringify(screenshots || []);
     
     await db.prepare(
       `UPDATE apps SET 
-        name = ?, package_name = ?, description = ?, version = ?, 
+        name = ?, age_rating = ?, description = ?, version = ?, 
         version_code = ?, size = ?, category = ?, icon_url = ?, 
         apk_url = ?, screenshots = ?, updated_at = ?
        WHERE id = ?`
     ).bind(
-      name, package_name, description, version, version_code, 
+      name, age_rating, description, version, version_code, 
       size, category, icon_url, apk_url, screenshotsJson, Date.now(), id
     ).run();
     
-    // Обновляем запись об обновлении
     await db.prepare(
       `INSERT OR REPLACE INTO app_updates (app_id, version_code, version_name, apk_url, changelog) 
        VALUES (?, ?, ?, ?, ?)`
