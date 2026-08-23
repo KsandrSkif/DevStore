@@ -388,7 +388,7 @@ router.post('/api/apps', async (request: Request, env: any) => {
     } = body;
     const db = env["devstore-api"];
     
-    if (!developer_id || !name || !age_rating || !version) {
+    if (!developer_id || !name || !age_rating || !version || !package_name) {
       return jsonResponse({ success: false, error: 'Missing required fields' }, 400);
     }
     
@@ -400,7 +400,6 @@ router.post('/api/apps', async (request: Request, env: any) => {
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     ).bind(id, developer_id, name, age_rating, package_name, description, version, version_code, size, category, icon_url, apk_url, screenshotsJson).run();
     
-    // Добавляем запись в обновления
     await db.prepare(
       `INSERT OR REPLACE INTO app_updates (app_id, version_code, version_name, apk_url, changelog) 
        VALUES (?, ?, ?, ?, ?)`
