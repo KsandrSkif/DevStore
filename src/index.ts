@@ -549,13 +549,11 @@ router.get('/api/apps/:id/update', async (request: Request, env: any) => {
     
     const db = env["devstore-api"];
     
-    // Получаем текущую версию из app_updates
     let update = await db.prepare(
       'SELECT * FROM app_updates WHERE app_id = ?'
     ).bind(id).first();
     
     if (!update) {
-      // Если нет в кэше, получаем из apps
       const app = await db.prepare(
         'SELECT id, version_code, version, apk_url FROM apps WHERE id = ?'
       ).bind(id).first();
@@ -564,7 +562,6 @@ router.get('/api/apps/:id/update', async (request: Request, env: any) => {
         return jsonResponse({ success: false, error: 'App not found' }, 404);
       }
       
-      // Добавляем в кэш
       await db.prepare(
         `INSERT OR REPLACE INTO app_updates (app_id, version_code, version_name, apk_url, changelog) 
          VALUES (?, ?, ?, ?, ?)`
