@@ -1,5 +1,5 @@
 {
-    "versionCode": 32,
+    "versionCode": 31,
     "versionName": "1.3.3",
     "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.3.3.apk",
     "changelog": "Серверное обновление:\n- стабилизирована система обновления магазина\n- пока только проверка магазином на то, что установлено приложение в телефоне\n-ссылки на приложение пока надо ставить по старинке, не через update.json"
