@@ -1,6 +1,6 @@
 {
-    "versionCode": 32,
-    "versionName": "1.3.4",
-    "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/V1/DevStore_1.3.4.apk",
-    "changelog": "Стабильное обновление:\n- стабилизирована система обновления магазина\n- ссылки через update.json"
+  "versionCode": 33,
+  "versionName": "1.3.5",
+  "apkUrl": "https://github.com/KsandrSkif/DevStore/releases/download/v1.3.5/DevStore_1.3.5.apk",
+  "changelog": "Что нового в 1.3.5:\n- исправлена установка приложений из магазина\n- стабилизирована система обновлений\n- улучшена обработка update.json"
 }
